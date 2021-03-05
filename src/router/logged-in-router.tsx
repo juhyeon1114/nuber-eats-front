@@ -1,27 +1,17 @@
 import React from "react";
-import { gql, useQuery } from "@apollo/client";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
+import { Header } from "../components/header";
+import { useMe } from "../hooks/useMe";
 
 const ClientRouter = () => [<Route path="/" exact></Route>];
 
-const ME_QUERY = gql`
-  query meQuery {
-    me {
-      id
-      email
-      role
-      verified
-    }
-  }
-`;
-
 export const LoggedInRouter = () => {
-  const { data, loading, error } = useQuery(ME_QUERY);
+  const { data, loading, error } = useMe();
 
   if (!data || loading || error) {
     return (
@@ -33,6 +23,7 @@ export const LoggedInRouter = () => {
 
   return (
     <Router>
+      <Header />
       <Switch>
         {data.me.role === "Client" && ClientRouter}
         <Redirect to="/" />
