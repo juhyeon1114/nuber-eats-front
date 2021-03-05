@@ -1,7 +1,13 @@
-import { gql, useQuery } from "@apollo/client";
 import React from "react";
-import { useHistory } from "react-router-dom";
-import { LOCALSTORAGE_TOKEN } from "../constants";
+import { gql, useQuery } from "@apollo/client";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+
+const ClientRouter = () => [<Route path="/" exact></Route>];
 
 const ME_QUERY = gql`
   query meQuery {
@@ -15,7 +21,6 @@ const ME_QUERY = gql`
 `;
 
 export const LoggedInRouter = () => {
-  const history = useHistory();
   const { data, loading, error } = useQuery(ME_QUERY);
 
   if (!data || loading || error) {
@@ -26,15 +31,12 @@ export const LoggedInRouter = () => {
     );
   }
 
-  const onClick = () => {
-    localStorage.removeItem(LOCALSTORAGE_TOKEN);
-    history.push("/login");
-  };
-
   return (
-    <div>
-      <h1>{data.me.role}</h1>
-      <button onClick={onClick}>logout</button>
-    </div>
+    <Router>
+      <Switch>
+        {data.me.role === "Client" && ClientRouter}
+        <Redirect to="/" />
+      </Switch>
+    </Router>
   );
 };

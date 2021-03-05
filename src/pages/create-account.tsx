@@ -48,7 +48,7 @@ export const CreateAccount = () => {
     } = data;
     if (ok) {
       window.confirm("계정이 생성되었습니다. 로그인 페이지로 이동합니다");
-      history.push("/login");
+      history.push("/");
     }
   };
 
@@ -137,7 +137,7 @@ export const CreateAccount = () => {
         </form>
         <div>
           이미 계정이 있으세요?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link to="/" className="text-blue-600 hover:underline">
             로그인
           </Link>
         </div>
