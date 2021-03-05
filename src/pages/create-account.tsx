@@ -31,7 +31,6 @@ export const CreateAccount = () => {
   const {
     register,
     getValues,
-    watch,
     errors,
     handleSubmit,
     formState,
@@ -45,7 +44,7 @@ export const CreateAccount = () => {
   const history = useHistory();
   const onCompleted = (data: createAccountMutation) => {
     const {
-      createAccount: { ok, error },
+      createAccount: { ok },
     } = data;
     if (ok) {
       window.confirm("계정이 생성되었습니다. 로그인 페이지로 이동합니다");
@@ -55,7 +54,7 @@ export const CreateAccount = () => {
 
   const [
     createAccountMutation,
-    { loading, error, data: createAccountMutationResult },
+    { loading, data: createAccountMutationResult },
   ] = useMutation<createAccountMutation, createAccountMutationVariables>(
     CREATE_ACCOUNT_MUTATION,
     { onCompleted }
@@ -85,6 +84,7 @@ export const CreateAccount = () => {
           <input
             ref={register({
               required: "Email is required",
+              // eslint-disable-next-line
               pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             })}
             name="email"
