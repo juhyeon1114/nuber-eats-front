@@ -1,9 +1,12 @@
 import React from "react";
-import { isLoggedInVar } from "../apollo";
+import { useHistory } from "react-router-dom";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 
 export const LoggedInRouter = () => {
+  const history = useHistory();
   const onClick = () => {
-    isLoggedInVar(false);
+    localStorage.removeItem(LOCALSTORAGE_TOKEN);
+    history.push("/login");
   };
   return (
     <div>
