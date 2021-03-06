@@ -7,8 +7,18 @@ import {
 } from "react-router-dom";
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
+import { NotFound } from "../pages/404";
+import { Restaurants } from "../pages/client/restaurants";
+import { ConfirmEmail } from "../pages/user/confirm-email";
 
-const ClientRouter = () => [<Route path="/" exact></Route>];
+const ClientRouter = [
+  <Route key={1} path="/" exact>
+    <Restaurants />
+  </Route>,
+  <Route key={2} path="/confirm" exact>
+    <ConfirmEmail />
+  </Route>,
+];
 
 export const LoggedInRouter = () => {
   const { data, loading, error } = useMe();
@@ -26,7 +36,10 @@ export const LoggedInRouter = () => {
       <Header />
       <Switch>
         {data.me.role === "Client" && ClientRouter}
-        <Redirect to="/" />
+        {/* <Redirect to="/" /> */}
+        <Route>
+          <NotFound />
+        </Route>
       </Switch>
     </Router>
   );
