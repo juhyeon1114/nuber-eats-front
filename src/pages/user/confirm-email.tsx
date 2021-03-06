@@ -17,14 +17,15 @@ const VERIFY_EMAIL_MUTATION = gql`
 `;
 
 export const ConfirmEmail = () => {
-  const { data: userData } = useMe();
+  const { data: userData, refetch } = useMe();
   const client = useApolloClient();
   const history = useHistory();
-  const onCompleted = (data: verifyEmail) => {
+  const onCompleted = async (data: verifyEmail) => {
     const {
       verifyEmail: { ok },
     } = data;
     if (ok && userData?.me.id) {
+      // await refetch();
       client.writeFragment({
         /**
          * writeFragment : 캐시에 있는 특정 타입의 일부만 수정하고 싶을 때 사용

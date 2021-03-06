@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { authTokenVar, isLoggedInVar } from "../apollo";
 import { Button } from "../components/button";
 import { FormError } from "../components/form-error";
-import { LOCALSTORAGE_TOKEN } from "../constants";
+import { EMAIL_PATTERN, LOCALSTORAGE_TOKEN } from "../constants";
 import nuberLogo from "../images/logo.svg";
 import {
   loginMutationVariables,
@@ -85,8 +85,7 @@ export const Login = () => {
           <input
             ref={register({
               required: "Email is required",
-              // eslint-disable-next-line
-              pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              pattern: EMAIL_PATTERN,
             })}
             name="email"
             required

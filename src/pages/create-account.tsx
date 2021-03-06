@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import { Button } from "../components/button";
 import { FormError } from "../components/form-error";
+import { EMAIL_PATTERN } from "../constants";
 import nuberLogo from "../images/logo.svg";
 import {
   createAccountMutation,
@@ -84,8 +85,7 @@ export const CreateAccount = () => {
           <input
             ref={register({
               required: "Email is required",
-              // eslint-disable-next-line
-              pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              pattern: EMAIL_PATTERN,
             })}
             name="email"
             required
