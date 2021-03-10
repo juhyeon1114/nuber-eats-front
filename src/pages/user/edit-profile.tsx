@@ -1,5 +1,5 @@
-import { gql, useApolloClient, useMutation } from "@apollo/client";
 import React from "react";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/button";
@@ -53,12 +53,12 @@ export const EditProfile = () => {
       }
     }
   };
-  const { data: userData, refetch } = useMe();
+  const { data: userData } = useMe();
   const [editProfile, { loading }] = useMutation<
     editProfile,
     editProfileVariables
   >(EDIT_PROFILE_MUTATION, { onCompleted });
-  const { register, handleSubmit, getValues, formState } = useForm<IFormProps>({
+  const { register, handleSubmit, getValues } = useForm<IFormProps>({
     mode: "onChange",
     defaultValues: {
       email: userData?.me.email,

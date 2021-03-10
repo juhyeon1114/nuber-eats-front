@@ -1,7 +1,7 @@
 import { gql, useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useLocation, useHistory, Link } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { NoResult } from "../../components/no-result";
 import { Pagination } from "../../components/pagination";
 import { Restaurant } from "../../components/restaurant";

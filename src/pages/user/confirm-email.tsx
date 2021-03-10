@@ -5,8 +5,8 @@ import {
   verifyEmailVariables,
   verifyEmail,
 } from "../../__generated__/verifyEmail";
-import { useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useHistory } from "react-router-dom";
 
 const VERIFY_EMAIL_MUTATION = gql`
   mutation verifyEmail($input: VerifyEmailInput!) {
@@ -18,7 +18,7 @@ const VERIFY_EMAIL_MUTATION = gql`
 `;
 
 export const ConfirmEmail = () => {
-  const { data: userData, refetch } = useMe();
+  const { data: userData } = useMe();
   const client = useApolloClient();
   const history = useHistory();
   const onCompleted = async (data: verifyEmail) => {
@@ -62,7 +62,7 @@ export const ConfirmEmail = () => {
         input: { code: code || "" },
       },
     });
-  }, []);
+  }, [verifyEmail]);
 
   return (
     <div className="mt-52 flex flex-col items-center justify-center">
