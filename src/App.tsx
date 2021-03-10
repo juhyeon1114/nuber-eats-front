@@ -6,8 +6,11 @@ import { LoggedOutRouter } from "./router/logged-out-router";
 
 const App = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
-
-  return isLoggedIn ? <LoggedInRouter /> : <LoggedOutRouter />;
+  return (
+    <div className=" px-4 md:px-0">
+      {isLoggedIn ? <LoggedInRouter /> : <LoggedOutRouter />}
+    </div>
+  );
 };
 
 export default App;

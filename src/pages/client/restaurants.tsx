@@ -7,8 +7,10 @@ import {
 } from "../../__generated__/restaurantsPageQuery";
 import { Restaurant } from "../../components/restaurant";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
+import { Category } from "../../components/category";
+import { Pagination } from "../../components/pagination";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPageQuery($input: RestaurantsInput!) {
@@ -59,7 +61,7 @@ export const Restaurants = () => {
     history.push({
       pathname: "/search",
       search: `?term=${searchTerm}`,
-      // state: {
+      // state: { // state는 url쿼리에 저장되지 않고, 브라우저 메모리에 저장된다. 즉, url에 노출되지 않는다
       //   searchTerm,
       // },
     });
@@ -86,15 +88,12 @@ export const Restaurants = () => {
         <div className="max-w-screen-2xl mx-auto mt-8 pb-20">
           <div className="flex justify-around mx-auto max-w-sm">
             {data?.allCategories.categories?.map((category) => (
-              <div key={category.id} className="flex flex-col items-center">
-                <div
-                  className="w-16 h-16 rounded-full bg-cover cursor-pointer"
-                  style={{ backgroundImage: `url(${category.coverImage})` }}
-                ></div>
-                <span className="text-sm text-center font-medium mt-1">
-                  {category.name}
-                </span>
-              </div>
+              <Link key={category.id} to={`/category/${category.slug}`}>
+                <Category
+                  coverImage={category.coverImage}
+                  name={category.name}
+                />
+              </Link>
             ))}
           </div>
 
@@ -109,34 +108,14 @@ export const Restaurants = () => {
               />
             ))}
           </div>
-          <div className="grid grid-cols-3 text-center max-w-md items-centerd mx-auto mt-10">
-            {page > 1 ? (
-              <button
-                onClick={onPrevPageClick}
-                className="focus:outline-none font-medium text-2xl"
-              >
-                &larr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-            <span className="mx-5">
-              Page {page} of {data?.restaurants.totalPages}
-            </span>
-            {page !== data?.restaurants.totalPages ? (
-              <button
-                onClick={onNextPageClick}
-                className="focus:outline-none font-medium text-2xl"
-              >
-                &rarr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-          </div>
+          <Pagination
+            page={page}
+            totalPages={data?.restaurants.totalPages}
+            onNextPageClick={onNextPageClick}
+            onPrevPageClick={onPrevPageClick}
+          />
         </div>
       )}
-      <div></div>
     </div>
   );
 };

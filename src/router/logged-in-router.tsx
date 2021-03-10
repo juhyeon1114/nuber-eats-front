@@ -8,6 +8,7 @@ import {
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { NotFound } from "../pages/404";
+import { Category } from "../pages/client/category";
 import { Restaurants } from "../pages/client/restaurants";
 import { Search } from "../pages/client/search";
 import { ConfirmEmail } from "../pages/user/confirm-email";
@@ -25,6 +26,9 @@ const ClientRouter = [
   </Route>,
   <Route key={4} path="/search" exact>
     <Search />
+  </Route>,
+  <Route key={5} path="/category/:slug" exact>
+    <Category />
   </Route>,
 ];
 
