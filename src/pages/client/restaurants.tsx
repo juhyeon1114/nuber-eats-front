@@ -6,6 +6,9 @@ import {
   restaurantsPageQueryVariables,
 } from "../../__generated__/restaurantsPageQuery";
 import { Restaurant } from "../../components/restaurant";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPageQuery($input: RestaurantsInput!) {
@@ -13,11 +16,7 @@ const RESTAURANTS_QUERY = gql`
       ok
       error
       categories {
-        id
-        name
-        coverImage
-        slug
-        restaurantsCount
+        ...CategoryParts
       }
     }
     restaurants(input: $input) {
@@ -26,19 +25,17 @@ const RESTAURANTS_QUERY = gql`
       totalPages
       totalItems
       results {
-        id
-        name
-        coverImage
-        category {
-          id
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
     }
   }
+  ${RESTAURANT_FRAGMENT}
+  ${CATEGORY_FRAGMENT}
 `;
+
+interface IFormProps {
+  searchTerm: string;
+}
 
 export const Restaurants = () => {
   const [page, setPage] = useState(1);
@@ -52,19 +49,36 @@ export const Restaurants = () => {
       },
     },
   });
-
   const onNextPageClick = () => setPage((current) => current + 1);
   const onPrevPageClick = () => setPage((current) => current - 1);
+  const { register, handleSubmit, getValues } = useForm<IFormProps>();
+  const history = useHistory();
+
+  const onSearchSubmit = () => {
+    const { searchTerm } = getValues();
+    history.push({
+      pathname: "/search",
+      search: `?term=${searchTerm}`,
+      // state: {
+      //   searchTerm,
+      // },
+    });
+  };
 
   return (
     <div>
       <Helmet>
-        <title>Restaurants | Nuber Eats</title>
+        <title>Home | Nuber Eats</title>
       </Helmet>
-      <form className=" bg-gray-800 w-full py-16 flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit(onSearchSubmit)}
+        className=" bg-gray-800 w-full py-16 flex items-center justify-center"
+      >
         <input
+          ref={register({ required: true, min: 3 })}
+          name="searchTerm"
           type="text"
-          className="input w-3/12 rounded-md border-0"
+          className="input w-3/4 md:w-3/12 rounded-md border-0"
           placeholder="식당 검색하기"
         />
       </form>
@@ -84,7 +98,7 @@ export const Restaurants = () => {
             ))}
           </div>
 
-          <div className="mt-5 grid grid-cols-3 gap-x-5 gap-y-10">
+          <div className="mt-5 grid md:grid-cols-3 gap-x-5 gap-y-10">
             {data?.restaurants.results?.map((restaurant) => (
               <Restaurant
                 id={restaurant.id + ""}
