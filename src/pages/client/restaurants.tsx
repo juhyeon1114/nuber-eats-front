@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { Helmet } from "react-helmet-async";
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
 } from "../../__generated__/restaurantsPageQuery";
+import { Restaurant } from "../../components/restaurant";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPageQuery($input: RestaurantsInput!) {
@@ -40,16 +41,20 @@ const RESTAURANTS_QUERY = gql`
 `;
 
 export const Restaurants = () => {
+  const [page, setPage] = useState(1);
   const { data, loading } = useQuery<
     restaurantsPageQuery,
     restaurantsPageQueryVariables
   >(RESTAURANTS_QUERY, {
     variables: {
       input: {
-        page: 1,
+        page,
       },
     },
   });
+
+  const onNextPageClick = () => setPage((current) => current + 1);
+  const onPrevPageClick = () => setPage((current) => current - 1);
 
   return (
     <div>
@@ -64,12 +69,12 @@ export const Restaurants = () => {
         />
       </form>
       {!loading && data && (
-        <div className="max-w-screen-2xl mx-auto mt-8">
+        <div className="max-w-screen-2xl mx-auto mt-8 pb-20">
           <div className="flex justify-around mx-auto max-w-sm">
             {data?.allCategories.categories?.map((category) => (
-              <div className="flex flex-col items-center">
+              <div key={category.id} className="flex flex-col items-center">
                 <div
-                  className="w-14 h-14 rounded-full bg-cover cursor-pointer"
+                  className="w-16 h-16 rounded-full bg-cover cursor-pointer"
                   style={{ backgroundImage: `url(${category.coverImage})` }}
                 ></div>
                 <span className="text-sm text-center font-medium mt-1">
@@ -77,6 +82,43 @@ export const Restaurants = () => {
                 </span>
               </div>
             ))}
+          </div>
+
+          <div className="mt-5 grid grid-cols-3 gap-x-5 gap-y-10">
+            {data?.restaurants.results?.map((restaurant) => (
+              <Restaurant
+                id={restaurant.id + ""}
+                key={restaurant.id}
+                coverImage={restaurant.coverImage}
+                name={restaurant.name}
+                categoryName={restaurant.category?.name}
+              />
+            ))}
+          </div>
+          <div className="grid grid-cols-3 text-center max-w-md items-centerd mx-auto mt-10">
+            {page > 1 ? (
+              <button
+                onClick={onPrevPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &larr;
+              </button>
+            ) : (
+              <div></div>
+            )}
+            <span className="mx-5">
+              Page {page} of {data?.restaurants.totalPages}
+            </span>
+            {page !== data?.restaurants.totalPages ? (
+              <button
+                onClick={onNextPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &rarr;
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       )}
