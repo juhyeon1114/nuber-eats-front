@@ -33,6 +33,7 @@
     "autoprefixer": "^10.2.4",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
+    "mock-apollo-client": "^1.0.0",
     "postcss": "^8.2.7",
     "prettier": "^2.2.1",
     "tailwindcss": "^2.0.3"
@@ -44,7 +45,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:cov" : "npm test -- --coverage --watchAll=false"
+    "test:cov": "npm test -- --coverage --watchAll=false"
   },
   "eslintConfig": {
     "extends": [

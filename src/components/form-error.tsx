@@ -5,5 +5,7 @@ interface IFormErrorProps {
 }
 
 export const FormError: React.FC<IFormErrorProps> = ({ msg }) => (
-  <span className="font-medium text-red-500">{msg}</span>
+  <span role="alert" className="font-medium text-red-500">
+    {msg}
+  </span>
 );
