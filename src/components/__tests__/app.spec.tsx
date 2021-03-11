@@ -19,7 +19,6 @@ describe("App", () => {
   it("renders LoggedOutRouter", () => {
     const { debug, getByText } = render(<App />);
     getByText("logged-out");
-    debug();
   });
 
   it("renders LoggedInRouter", async () => {
