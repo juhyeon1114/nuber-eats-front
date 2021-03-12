@@ -17,17 +17,9 @@ describe("Create Account", () => {
   it("should be able to create account", () => {
     user.intercept("http:/localhost:4000/graphql", (req) => {
       const { operationName } = req.body;
-      if (operationName === "createAccountMutation") {
+      if (operationName && operationName === "createAccountMutation") {
         req.reply((res) => {
-          res.send({
-            data: {
-              createAccount: {
-                ok: true,
-                error: null,
-                __typename: "CreateAccountOutput",
-              },
-            },
-          });
+          res.send({ fixture: "auth/create-account.json" });
         });
       }
     });
