@@ -5,6 +5,7 @@ describe("Log In", () => {
   });
   it("can see email / password validation errors", () => {
     user.visit("/");
+    user.title().should("eq", "Login | Nuber Eats");
     user.findAllByPlaceholderText(/email/i).type("wrong@email");
     user.findByRole("alert").should("have.text", "이메일을 입력해주세요");
     user.findAllByPlaceholderText(/email/i).clear();
@@ -17,13 +18,7 @@ describe("Log In", () => {
     user.findByRole("alert").should("have.text", "Password is required");
   });
   it("can fill out the form and log in", () => {
-    user.visit("/");
-    user.findAllByPlaceholderText(/email/i).type("juhyeon@gomiad.com");
-    user.findAllByPlaceholderText(/password/i).type("rlawngus");
-    user
-      .findByRole("button")
-      .should("not.have.class", "pointer-events-none")
-      .click();
-    user.window().its("localStorage.token").should("be.a", "string");
+    // @ts-ignore
+    user.login("juhyeon@gomiad.com", "rlawngus");
   });
 });
