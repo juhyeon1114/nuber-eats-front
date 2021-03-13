@@ -123,7 +123,7 @@ export const Login = () => {
         </form>
         <div>
           NuberEats에 처음이신가요?{" "}
-          <Link to="/create-account" className=" text-blue-600 hover:underline">
+          <Link to="/create-account" className="link">
             회원가입
           </Link>
         </div>
