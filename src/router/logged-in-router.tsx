@@ -44,23 +44,24 @@ export const LoggedInRouter = () => {
       <Switch>
         {data.me.role === "Client" &&
           clientRoutes.map((route) => (
-            <Route exact key={route.path}>
+            <Route exact key={route.path} path={route.path}>
               {route.component}
             </Route>
           ))}
 
         {data.me.role === "Owner" &&
           restaurantRoutes.map((route) => (
-            <Route exact key={route.path}>
+            <Route exact key={route.path} path={route.path}>
               {route.component}
             </Route>
           ))}
 
         {commonRoutes.map((route) => (
-          <Route exact key={route.path}>
+          <Route exact key={route.path} path={route.path}>
             {route.component}
           </Route>
         ))}
+
         <Route>
           <NotFound />
         </Route>
