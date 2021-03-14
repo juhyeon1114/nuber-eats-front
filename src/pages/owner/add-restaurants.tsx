@@ -10,7 +10,6 @@ import {
 } from "../../__generated__/createRestaurant";
 import { MY_RESTAURANTS_QUERY } from "./my-restaurants";
 import { useHistory } from "react-router-dom";
-import { myRestaurants } from "../../__generated__/myRestaurants";
 
 const CREATE_RESTAURANT_MUTATION = gql`
   mutation createRestaurant($input: CreateRestaurantInput!) {
