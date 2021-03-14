@@ -1,5 +1,5 @@
-import { gql, useMutation } from "@apollo/client";
 import React, { useState } from "react";
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/button";
@@ -8,12 +8,16 @@ import {
   createRestaurant,
   createRestaurantVariables,
 } from "../../__generated__/createRestaurant";
+import { MY_RESTAURANTS_QUERY } from "./my-restaurants";
+import { useHistory } from "react-router-dom";
+import { myRestaurants } from "../../__generated__/myRestaurants";
 
 const CREATE_RESTAURANT_MUTATION = gql`
   mutation createRestaurant($input: CreateRestaurantInput!) {
     createRestaurant(input: $input) {
       error
       ok
+      restaurantId
     }
   }
 `;
@@ -26,12 +30,41 @@ interface IFormProps {
 }
 
 export const AddRestaurant = () => {
+  const history = useHistory();
+  const client = useApolloClient();
+  const [imageUrl, setImageUrl] = useState();
+
   const onCompleted = (data: createRestaurant) => {
     const {
-      createRestaurant: { ok, error },
+      createRestaurant: { ok, restaurantId },
     } = data;
     if (ok) {
+      const { name, categoryName, address } = getValues();
       setUploading(false);
+      const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY }); //cache의 현재 state를 읽고 있음
+      if (queryResult) {
+        client.writeQuery({
+          query: MY_RESTAURANTS_QUERY,
+          data: {
+            myRestaurants: {
+              ...queryResult.myRestaurants,
+              restaurants: [
+                {
+                  id: restaurantId,
+                  name,
+                  category: { name: categoryName, __typename: "Category" },
+                  isPromoted: false,
+                  address,
+                  coverImage: imageUrl,
+                  __typename: "Restaurant",
+                },
+                ...queryResult.myRestaurants.restaurants,
+              ],
+            },
+          },
+        });
+      }
+      history.push("/");
     }
   };
   const [createRestaurantMutation, { data }] = useMutation<
@@ -39,6 +72,9 @@ export const AddRestaurant = () => {
     createRestaurantVariables
   >(CREATE_RESTAURANT_MUTATION, {
     onCompleted,
+    refetchQueries: client.readQuery({ query: MY_RESTAURANTS_QUERY })
+      ? []
+      : [{ query: MY_RESTAURANTS_QUERY }], // 레스토랑 생성 후, 레스토랑 목록을 다시 가져옴
   });
   const { register, getValues, formState, handleSubmit } = useForm<IFormProps>({
     mode: "onChange",
@@ -57,6 +93,7 @@ export const AddRestaurant = () => {
           body: formBody,
         })
       ).json();
+      setImageUrl(coverImage);
       createRestaurantMutation({
         variables: {
           input: {
@@ -74,7 +111,7 @@ export const AddRestaurant = () => {
       <Helmet>
         <title>Add Restaurant | Nuber Eats</title>
       </Helmet>
-      <h4 className="font-semibold text-2xl mb-3">Add Restaurant</h4>
+      <h4 className="font-semibold text-2xl mb-3">음식점 생성</h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5"
@@ -83,21 +120,21 @@ export const AddRestaurant = () => {
           className="input"
           type="text"
           name="name"
-          placeholder="Name"
+          placeholder="이름"
           ref={register({ required: "Name is required." })}
         />
         <input
           className="input"
           type="text"
           name="address"
-          placeholder="Address"
+          placeholder="주소"
           ref={register({ required: "Address is required." })}
         />
         <input
           className="input"
           type="text"
           name="categoryName"
-          placeholder="Category Name"
+          placeholder="카테고리"
           ref={register({ required: "Category Name is required." })}
         />
         <div>
@@ -111,7 +148,7 @@ export const AddRestaurant = () => {
         <Button
           loading={uploading}
           canClick={formState.isValid}
-          actionText="Create Restaurant"
+          actionText="생성"
         />
         {data?.createRestaurant?.error && (
           <FormError msg={data.createRestaurant.error} />
