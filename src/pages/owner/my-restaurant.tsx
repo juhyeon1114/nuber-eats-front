@@ -1,12 +1,26 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import { Link, useParams } from "react-router-dom";
-import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
+import {
+  DISH_FRAGMENT,
+  ORDERS_FRAGMENT,
+  RESTAURANT_FRAGMENT,
+} from "../../fragment";
 import {
   myRestaurant,
   myRestaurantVariables,
 } from "../../__generated__/myRestaurant";
 import { Dish } from "../../components/dish";
+import {
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart,
+  VictoryLabel,
+  VictoryLine,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
+} from "victory";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -18,11 +32,15 @@ export const MY_RESTAURANT_QUERY = gql`
         menu {
           ...DishParts
         }
+        orders {
+          ...OrderParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
   ${DISH_FRAGMENT}
+  ${ORDERS_FRAGMENT}
 `;
 
 interface IParams {
@@ -41,6 +59,15 @@ export const MyRestaurant = () => {
       },
     }
   );
+
+  const chartData = [
+    { day: 1, orders: 30000 },
+    { day: 2, orders: 15000 },
+    { day: 3, orders: 42500 },
+    { day: 4, orders: 230000 },
+    { day: 5, orders: 71500 },
+    { day: 6, orders: 68300 },
+  ];
 
   return (
     <div>
@@ -78,6 +105,45 @@ export const MyRestaurant = () => {
               ))}
             </div>
           )}
+        </div>
+        <div className="mt-5">
+          <h4 className="text-center text-2xl font-medium">Sales</h4>
+          <div className="mx-auto">
+            <VictoryChart
+              domainPadding={40}
+              theme={VictoryTheme.material}
+              width={window.innerWidth}
+              height={400}
+              containerComponent={<VictoryVoronoiContainer />}
+            >
+              <VictoryAxis
+                tickLabelComponent={<VictoryLabel renderInPortal />}
+                style={{ tickLabels: { fontSize: 18, angle: 45 } }}
+                tickFormat={(tick) => new Date(tick).toLocaleDateString("ko")}
+              />
+              <VictoryAxis
+                style={{ tickLabels: { fontSize: 18, fill: "olive" } }}
+                dependentAxis
+                tickFormat={(tick) => `${tick / 1000}k`}
+              />
+              <VictoryLine
+                // interpolation="natural"
+                labels={(datum) => Math.round(datum.y)}
+                labelComponent={
+                  <VictoryTooltip //tooltip VS label
+                    style={{ fontSize: 18 }}
+                    renderInPortal
+                    dy={-20}
+                  />
+                }
+                style={{ data: { strokeWidth: 5 } }}
+                data={data?.myRestaurant.restaurant?.orders.map((order) => ({
+                  x: order.createdAt,
+                  y: order.total,
+                }))}
+              />
+            </VictoryChart>
+          </div>
         </div>
       </div>
     </div>
