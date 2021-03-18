@@ -13,7 +13,6 @@ import {
 import { Dish } from "../../components/dish";
 import {
   VictoryAxis,
-  VictoryBar,
   VictoryChart,
   VictoryLabel,
   VictoryLine,
@@ -59,15 +58,6 @@ export const MyRestaurant = () => {
       },
     }
   );
-
-  const chartData = [
-    { day: 1, orders: 30000 },
-    { day: 2, orders: 15000 },
-    { day: 3, orders: 42500 },
-    { day: 4, orders: 230000 },
-    { day: 5, orders: 71500 },
-    { day: 6, orders: 68300 },
-  ];
 
   return (
     <div>
