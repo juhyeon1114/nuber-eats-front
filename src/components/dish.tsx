@@ -11,7 +11,6 @@ interface IDishProps {
   orderStarted?: boolean;
   selecItemToggle?: (dishId: number) => void;
   isSelected?: boolean;
-  addOptionToItem?: (dishId: number, options: any) => void;
 }
 
 export const Dish: React.FC<IDishProps> = ({
@@ -24,7 +23,7 @@ export const Dish: React.FC<IDishProps> = ({
   orderStarted = false,
   selecItemToggle,
   isSelected = false,
-  addOptionToItem,
+  children: dishOptions,
 }) => {
   return (
     <div
@@ -52,24 +51,7 @@ export const Dish: React.FC<IDishProps> = ({
       {isCustomer && options && options.length > 0 && (
         <div>
           <h5 className="mt-8 mb-3 font-medium">옵션</h5>
-          {options?.map((option, idx) => (
-            <span
-              className="flex items-center border p-1"
-              key={idx}
-              onClick={() =>
-                addOptionToItem
-                  ? addOptionToItem(id, {
-                      name: option.name,
-                    })
-                  : null
-              }
-            >
-              <h6 className="mr-2">{option.name}</h6>
-              <h6 className="text-sm opacity-75">
-                ({option.extra ? option.extra : 0}원)
-              </h6>
-            </span>
-          ))}
+          {dishOptions}
         </div>
       )}
     </div>
