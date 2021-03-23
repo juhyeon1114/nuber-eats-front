@@ -142,6 +142,7 @@ export const Restaurant = () => {
   });
 
   const triggerConfirmOrder = () => {
+    if (placingOrder) return;
     if (orderItems.length === 0) {
       alert("주문이 없습니다");
       return;

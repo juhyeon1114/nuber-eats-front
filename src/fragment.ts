@@ -43,9 +43,26 @@ export const DISH_FRAGMENT = gql`
 `;
 
 export const ORDERS_FRAGMENT = gql`
-  fragment OrderParts on Order {
+  fragment OrdersParts on Order {
     id
     createdAt
     total
+  }
+`;
+
+export const ORDER_FRAGMENT = gql`
+  fragment OrderParts on Order {
+    id
+    status
+    total
+    driver {
+      email
+    }
+    customer {
+      email
+    }
+    restaurant {
+      name
+    }
   }
 `;

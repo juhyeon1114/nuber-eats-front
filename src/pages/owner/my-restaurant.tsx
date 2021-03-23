@@ -32,7 +32,7 @@ export const MY_RESTAURANT_QUERY = gql`
           ...DishParts
         }
         orders {
-          ...OrderParts
+          ...OrdersParts
         }
       }
     }
